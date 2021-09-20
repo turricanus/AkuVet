@@ -1,0 +1,17 @@
+<RCC>
+  <qresource prefix="logo">
+    <file>images/a_Vetlogo2.gif</file>
+    <file>images/praxislogo.gif</file>
+    <file>images/praxislogotrans.gif</file>
+  </qresource>
+  <qresource prefix="icon">
+    <file>icons/others/black/Cat Filled.png</file>
+    <file>icons/others/black/Cat.png</file>
+    <file>icons/others/black/Dog Filled.png</file>
+    <file>icons/others/black/Dog.png</file>
+    <file>icons/others/black/Horse Filled.png</file>
+    <file>icons/others/black/Horse.png</file>
+    <file>icons/others/black/Shutdown Filled.png</file>
+    <file>icons/others/black/Shutdown.png</file>
+  </qresource>
+</RCC>
