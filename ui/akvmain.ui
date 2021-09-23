@@ -178,8 +178,11 @@
    </attribute>
    <addaction name="actionClose"/>
    <addaction name="separator"/>
+   <addaction name="actionCustomer"/>
    <addaction name="actionTherapy"/>
    <addaction name="separator"/>
+   <addaction name="actionTiere"/>
+   <addaction name="actionFinance"/>
   </widget>
   <action name="actionImport">
    <property name="text">
@@ -198,25 +201,37 @@
   </action>
   <action name="actionClose">
    <property name="icon">
-    <iconset>
-     <activeoff>:/icon/icons/others/black/Shutdown Filled.png</activeoff>
-    </iconset>
+    <iconset resource="resources/akuvet.qrc">
+     <normaloff>:/logo/Shutdown Filled.png</normaloff>
+     <activeoff>:/icon/icons/others/black/Shutdown Filled.png</activeoff>:/logo/Shutdown Filled.png</iconset>
    </property>
    <property name="text">
     <string>Beenden</string>
    </property>
   </action>
   <action name="actionCustomer">
+   <property name="icon">
+    <iconset resource="resources/akuvet.qrc">
+     <normaloff>:/icon/Businessman.png</normaloff>:/icon/Businessman.png</iconset>
+   </property>
    <property name="text">
     <string>Kunden</string>
    </property>
   </action>
   <action name="actionTiere">
+   <property name="icon">
+    <iconset resource="resources/akuvet.qrc">
+     <normaloff>:/icon/Horse.png</normaloff>:/icon/Horse.png</iconset>
+   </property>
    <property name="text">
     <string>Tiere</string>
    </property>
   </action>
   <action name="actionFinance">
+   <property name="icon">
+    <iconset resource="resources/akuvet.qrc">
+     <normaloff>:/icon/Bullish.png</normaloff>:/icon/Bullish.png</iconset>
+   </property>
    <property name="text">
     <string>Finanzen</string>
    </property>
@@ -224,7 +239,7 @@
   <action name="actionTherapy">
    <property name="icon">
     <iconset resource="resources/akuvet.qrc">
-     <normaloff>:/icon/icons/others/black/Horse Filled.png</normaloff>:/icon/icons/others/black/Horse Filled.png</iconset>
+     <normaloff>:/icon/Xbox Cross.png</normaloff>:/icon/Xbox Cross.png</iconset>
    </property>
    <property name="text">
     <string>Behandlungen</string>

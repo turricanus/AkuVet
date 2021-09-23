@@ -6,7 +6,7 @@ from PyQt5.QtSql import (
 )
 from PyQt5.QtWidgets import (
     QMessageBox,
-    QTableView, QDialog,
+    QTableView, QDialog, QPushButton
 )
 
 import locale
@@ -48,6 +48,10 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
         self.tbwtreatment.tabBarClicked.connect(self.evt_select_tab)
         # self.btn_service_calc_price.clicked.connect(self.refresh_service)
         self.dm.treatment_service_model.dataChanged.connect(self.refresh_data_treatment_service)
+        self.btntreatsave.clicked.connect(self.evt_btn_save_clicked)
+        self.btntreat_cancel.clicked.connect(self.evt_btn_cancel_clicked)
+        self.btntbwnew.clicked.connect(self.evt_btn_clicked_new_treatment_item)
+        self.btntbwdelete.clicked.connect(self.evt_btn_clicked_delete_treatment_item)
 
     def get_therapies_from_animal(self, animalid):
         if animalid:
@@ -184,3 +188,29 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
         test = b.get_sum_service_treatment()
         print(test)
         self.evt_treatment_clicked(idx)
+
+    def evt_btn_save_clicked(self):
+        if self.actual_tab_showed == 0:
+            tok = self.dm.treatment_diagnosis_model.submitAll()
+        elif self.actual_tab_showed == 1:
+            tok = self.dm.treatment_service_model.submitAll()
+        elif self.actual_tab_showed == 2:
+            tok = self.dm.treatment_medics_model.submitAll()
+        if not tok:
+            QMessageBox(self, 'Fehler beim Speicher', 'Der Speichervorgang schlug fehl.')
+
+    def evt_btn_cancel_clicked(self):
+        if self.actual_tab_showed == 0:
+            tok = self.dm.treatment_diagnosis_model.revertAll()
+        elif self.actual_tab_showed == 1:
+            tok = self.dm.treatment_service_model.revertAll()
+        elif self.actual_tab_showed == 2:
+            tok = self.dm.treatment_medics_model.revertAll()
+
+    def evt_btn_clicked_new_treatment_item(self):
+        # Todo
+        pass
+
+    def evt_btn_clicked_delete_treatment_item(self):
+        # Todo
+        pass

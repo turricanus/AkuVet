@@ -80,6 +80,7 @@ class DataModels:
         self.treatment_diagnosis_model.setFilter(f'ID_Behandlung = {treat_id}')
         self.treatment_diagnosis_model.setRelation(2, QSqlRelation('Diagnosen', 'ID_Diagnosen', 'Diagnose'))
         self.treatment_diagnosis_model.setJoinMode(QSqlRelationalTableModel.JoinMode(1))
+        self.treatment_diagnosis_model.setEditStrategy(QSqlTableModel.EditStrategy(2))
         self.treatment_diagnosis_model.setSort(3, Qt.SortOrder(0))
         self.treatment_diagnosis_model.select()
 
@@ -151,9 +152,6 @@ class DataModels:
         else:
             QMessageBox.critical(self, 'DatabaseError', f'Database Error \n\n {query.lastError().text()}')
 
-
-
-
     # getter
     def get_treatid_from_treatmodel_row(self,row):
         return self.treatment_selection_model.record(row).value('ID_Behandlung')
@@ -164,9 +162,7 @@ class DataModels:
     def get_animalid_from_animimalmodel_row(self, row):
         return self.owned_animals_model.record(row).value('ID_Tier')
 
-
     # calculate prices
-
     def calc_sum_from_service_treatment(self, treatment_id):
         query = QSqlQuery()
         query.prepare('SELECT sum(brutto) as sum_service_treatment FROM Beh_Leistungen '

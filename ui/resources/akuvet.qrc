@@ -1,17 +1,47 @@
 <RCC>
   <qresource prefix="logo">
+    <file>Bullish.png</file>
+    <file>Businessman.png</file>
+    <file>Cat Filled.png</file>
+    <file>Cat.png</file>
+    <file>Clinic Filled.png</file>
+    <file>Clinic.png</file>
+    <file>Dog Filled.png</file>
+    <file>Dog.png</file>
+    <file>Gender Neutral User Filled.png</file>
+    <file>Gender Neutral User.png</file>
+    <file>group.png</file>
+    <file>Horse Filled.png</file>
+    <file>Horse.png</file>
+    <file>Info.png</file>
+    <file>Minus Filled.png</file>
+    <file>Minus.png</file>
+    <file>Name Filled.png</file>
+    <file>Name.png</file>
+    <file>people.png</file>
+    <file>Plus Filled.png</file>
+    <file>Plus.png</file>
+    <file>Shutdown Filled.png</file>
+    <file>Shutdown.png</file>
+    <file>Work.png</file>
+    <file>Xbox Cross Filled.png</file>
+    <file>Xbox Cross.png</file>
     <file>images/a_Vetlogo2.gif</file>
     <file>images/praxislogo.gif</file>
     <file>images/praxislogotrans.gif</file>
   </qresource>
   <qresource prefix="icon">
-    <file>icons/others/black/Cat Filled.png</file>
-    <file>icons/others/black/Cat.png</file>
-    <file>icons/others/black/Dog Filled.png</file>
-    <file>icons/others/black/Dog.png</file>
-    <file>icons/others/black/Horse Filled.png</file>
-    <file>icons/others/black/Horse.png</file>
-    <file>icons/others/black/Shutdown Filled.png</file>
-    <file>icons/others/black/Shutdown.png</file>
+    <file>Bullish.png</file>
+    <file>Businessman.png</file>
+    <file>Info.png</file>
+    <file>Work.png</file>
+    <file>Cat.png</file>
+    <file>Dog Filled.png</file>
+    <file>Dog.png</file>
+    <file>Horse Filled.png</file>
+    <file>Horse.png</file>
+    <file>Xbox Cross Filled.png</file>
+    <file>Xbox Cross.png</file>
+    <file>Cat Filled.png</file>
   </qresource>
 </RCC>
