@@ -53,6 +53,10 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
         self.btntbwnew.clicked.connect(self.evt_btn_clicked_new_treatment_item)
         self.btntbwdelete.clicked.connect(self.evt_btn_clicked_delete_treatment_item)
 
+    def insert_treatment_diagnosis(self):
+        lc = self.dm.treatment_diagnosis_model.rowCount()
+        self.dm.treatment_diagnosis_model.insertRow(lc+1)
+
     def get_therapies_from_animal(self, animalid):
         if animalid:
             self.dm.set_treatment_model(animalid)
@@ -208,8 +212,7 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
             tok = self.dm.treatment_medics_model.revertAll()
 
     def evt_btn_clicked_new_treatment_item(self):
-        # Todo
-        pass
+        self.insert_treatment_diagnosis()
 
     def evt_btn_clicked_delete_treatment_item(self):
         # Todo
