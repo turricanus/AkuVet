@@ -13,7 +13,7 @@ import locale
 # Custom Module
 from ui.therapymaindialog_ui import Ui_lytMain
 from obj import services
-from.models import DataModels
+from .models import DataModels
 
 
 class WindowTherapy(QDialog, Ui_lytMain, DataModels):
@@ -46,18 +46,8 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
         self.livanimal.clicked.connect(self.evt_animal_clicked)
         self.tbvtreatselection.clicked.connect(self.evt_treatment_clicked)
         self.tbwtreatment.tabBarClicked.connect(self.evt_select_tab)
-        self.btn_service_calc_price.clicked.connect(self.refresh_service)
+        # self.btn_service_calc_price.clicked.connect(self.refresh_service)
         self.dm.treatment_service_model.dataChanged.connect(self.refresh_data_treatment_service)
-
-    def refresh_service(self):
-        idx = self.tbvservice.selectedIndexes()[0]
-        row = idx.row()
-        l = self.treatment_service_model.record(row).value('Leistung')
-        ez = self.treatment_service_model.record(row).value('Preis')
-        m = self.treatment_service_model.record(row).value('Menge')
-        f = self.treatment_service_model.record(row).value('Faktor')
-        s = self.treatment_service_model.record(row).value('Steuersatz')
-        ep = services.Services(l, ez, s, f, None, m).calc_gross_price()
 
     def get_therapies_from_animal(self, animalid):
         if animalid:
@@ -67,14 +57,16 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
 
     def fill_treatment_form(self, recordrow=0):
         self.dtetherapy.setDate(self.dm.treatment_model.record(recordrow).value('Datum'))
-        self.tbwtreatment.setTabText(1, f'Leistungen: '
-                                        f'{str(self.dm.treatment_model.record(recordrow).value("sum_services"))}')
-        self.tbwtreatment.setTabText(2, f'Medikamente: '
-                                        f'{str(self.dm.treatment_model.record(recordrow).value("sum_medics"))}')
+        self.actual_treatment_id = self.dm.get_treatid_from_treatmodel_row(recordrow)
+        self.tbwtreatment.setTabText(1,
+                                     f'Leistungen: {self.dm.calc_sum_from_service_treatment(self.actual_treatment_id)}')
+        self.tbwtreatment.setTabText(2,
+                                     f'Medikamente: {self.dm.calc_sum_from_medics_treatment(self.actual_treatment_id)}')
+
         self.ledshortdisscribtion.setText(self.dm.treatment_model.record(recordrow).value('Kurz_Text'))
         self.tewananemsis.setText(self.dm.treatment_model.record(recordrow).value('Anamnese'))
         self.tewfindings.setText(self.dm.treatment_model.record(recordrow).value('Befund'))
-        self.set_treatment_detail_tabw()
+        self.set_treatment_detail_tabw(self.actual_tab_showed)
 
     def initialize_treatment_view(self):
         # self.treatment_model.setEditStrategy(QSqlTableModel.OnManualSubmit)
@@ -113,18 +105,6 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
         self.tbvservice.resizeColumnsToContents()
         self.tbvservice.setItemDelegate(QSqlRelationalDelegate(self.tbvservice))
 
-    def treatment_medics_sum(self):
-        medics_sum = 0
-        for medic in range(self.dm.treatment_medics_model.rowCount()):
-            medics_sum += self.dm.treatment_medics_model.record(medic).value('beh_med_preis_brutto')
-        return self.loc.currency(medics_sum)
-
-    def treatment_service_sum(self):
-        service_sum = 0
-        for service in range(self.dm.treatment_service_model.rowCount()):
-            service_sum += self.dm.treatment_service_model.record(service).value('brutto')
-        return self.loc.currency(service_sum)
-
     # Load Diagnosis Data into Table in Tabwidget
     def set_diagnosis_view(self, treat_id):
         self.dm.set_treatment_diagnosis_module(treat_id)
@@ -138,18 +118,16 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
     # set Tabwidget
     def set_treatment_detail_tabw(self, tabindex=0):
         self.tbwtreatment.setCurrentIndex(tabindex)
-        treat_id = self.dm.treatment_model.record(0).value('ID_Behandlung')
-
-        self.tbwtreatment.setTabText(1, f'Leistungen: {self.treatment_service_sum()}')
-        self.tbwtreatment.setTabText(2, f'Medikamente: {self.treatment_medics_sum()}')
+        self.tbwtreatment.setTabText(1,
+                                     f'Leistungen: {self.dm.calc_sum_from_service_treatment(self.actual_treatment_id)}')
+        self.tbwtreatment.setTabText(2,
+                                     f'Medikamente: {self.dm.calc_sum_from_medics_treatment(self.actual_treatment_id)}')
         if tabindex == 0:
-            self.set_diagnosis_view(treat_id)
+            self.set_diagnosis_view(self.actual_treatment_id)
         elif tabindex == 1:
-            self.set_service_view(treat_id)
-            self.tbwtreatment.setTabText(1, f'Leistungen: {self.treatment_service_sum()}')
+            self.set_service_view(self.actual_treatment_id)
         elif tabindex == 2:
-            self.set_medics_view(treat_id)
-            self.tbwtreatment.setTabText(tabindex, f'Medikamente: {self.treatment_medics_sum()}')
+            self.set_medics_view(self.actual_treatment_id)
 
     def set_customer_view(self):
         self.customer_view.setModel(self.dm.kunden_model)
@@ -170,14 +148,16 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
 
     # Signal Handler
     def evt_selectcustomer_clicked(self, idx):
-        self.actual_Customer_id = self.dm.kunden_model.record(idx.row()).value('Relakey')
+        row = idx.row()
+        self.actual_Customer_id = self.dm.get_customerid_from_customermodel_row(row)
         self.dm.get_animals_from_customer(self.actual_Customer_id)
         self.livanimal.setModel(self.dm.owned_animals_model)
         self.livanimal.setCurrentIndex(self.dm.owned_animals_model.index(0, 0))
         self.evt_animal_clicked(self.livanimal.currentIndex())
 
     def evt_animal_clicked(self, idx):
-        self.actual_animal_id = self.dm.owned_animals_model.record(idx.row()).value('ID_Tier')
+        row = idx.row()
+        self.actual_animal_id = self.dm.get_animalid_from_animimalmodel_row(row)
         self.get_therapies_from_animal(self.actual_animal_id)
         self.dm.treatment_selection_model.select()
         self.tbvtreatselection.selectRow(0)
@@ -186,23 +166,21 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
 
     def evt_treatment_clicked(self, idx):
         row = idx.row()
-        self.actual_treatment_id = self.dm.treatment_selection_model.record(row).value('ID_Behandlung')
         self.dm.treatment_model = self.dm.treatment_selection_model
+        self.actual_treatment_id = self.dm.get_treatid_from_treatmodel_row(row)
         self.dm.treatment_model.selectRow(row)
         self.fill_treatment_form(row)
 
     def evt_select_tab(self, tabindex):
+        self.actual_tab_showed = tabindex
         self.set_treatment_detail_tabw(tabindex)
 
     def refresh_data_treatment_service(self, idx):
         row = idx.row()
-        l = self.treatment_service_model.record(row).value('Leistung')
-        ez = self.treatment_service_model.record(row).value('Preis')
-        m = self.treatment_service_model.record(row).value('Menge')
-        f = self.treatment_service_model.record(row).value('Faktor')
-        s = self.treatment_service_model.record(row).value('Steuersatz')
-        ep = self.treatment_service_model.record(row).value('brutto')
-        if idx.column() in range(2, 6):
-            # idx = self.tbvservice.selectedIndexes()[0]
-            ep = services.Services(l, ez, s, f, None, m).calc_gross_price()
-        print(ep)
+        treat_id = self.dm.get_treatid_from_treatmodel_row(row)
+        b = services.Services()
+        b.set_data_by_id(treat_id)
+        b.calc_gross_price()
+        test = b.get_sum_service_treatment()
+        print(test)
+        self.evt_treatment_clicked(idx)

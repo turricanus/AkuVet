@@ -54,8 +54,7 @@ class WdMain(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
         super(WdMain, self).__init__()
-        self.loc = locale
-        self.loc.setlocale(locale.LC_ALL, 'de_de')
+        # self.locale.setlocale(locale.LC_ALL, 'de_de')
 
         self.setupUi(self)
 

@@ -5,10 +5,15 @@ from PyQt5.QtSql import (
 )
 from PyQt5.QtCore import Qt, QDate, QDateTime, QLocale
 
-from PyQt5.QtWidgets import  QMessageBox
+from PyQt5.QtWidgets import QMessageBox
+
 
 class DataModels:
     def __init__(self):
+        self.universal_query_model = QSqlQueryModel()
+
+        self.service_catalog_table_model = QSqlTableModel()
+
         self.kunden_model = QSqlQueryModel()
         self.initialize_model_kundenauswahl()
 
@@ -23,6 +28,7 @@ class DataModels:
         self.treatment_diagnosis_model = QSqlRelationalTableModel()
 
         self.treatment_service_model = QSqlRelationalTableModel()
+        self.treatment_service_model.setEditStrategy(QSqlTableModel.EditStrategy(1))
 
         self.treatment_medics_model = QSqlRelationalTableModel()
         self.initialize_treatment_medic_model()
@@ -45,6 +51,18 @@ class DataModels:
         self.owned_animals_model.setHeaderData(5, Qt.Horizontal, "Species")
         self.owned_animals_model.setHeaderData(6, Qt.Horizontal, "Race")
         self.owned_animals_model.setHeaderData(7, Qt.Horizontal, "Sex")
+
+    def set_treatment_service_by_id(self, id_service_pk):
+        self.treatment_service_model.setTable('Beh_Leistungen')
+        filt=f'ID_Beh_Leistung = {str(id_service_pk)}'
+        self.treatment_service_model.setFilter(filt)
+        self.treatment_service_model.select()
+
+    def set_service_catalog_by_id(self, id_service_catalog_pk):
+        self.service_catalog_table_model.setTable('Akuvet_serv.GOT_Leistungen')
+        filt=f'ID = {str(id_service_catalog_pk)}'
+        self.service_catalog_table_model.setFilter(filt)
+        self.service_catalog_table_model.select()
 
     def initialize_treatment_selection_model(self):
         self.treatment_selection_model.setTable('Behandlung')
@@ -114,7 +132,9 @@ class DataModels:
                 left join Tiere on Tiere.ID_Kunde = Patientenbesitzer.relakey\
                 WHERE lower(concat(Patientenbesitzer.name," ",Patientenbesitzer.vorname," ",Orte.ort ," ", Tiere.Name))\
                  like ? or lower(concat(Patientenbesitzer.name," ",Orte.ort ," ", Tiere.Name)) like ?\
-                ORDER BY Patientenbesitzer.name')
+                  GROUP BY `Patientenbesitzer`.`relakey`,`Patientenbesitzer`.`kundennr` , `Anrede`.`anrede`,\
+                   `Patientenbesitzer`.`vorname`, `Patientenbesitzer`. `name`, `Orte`.`ort`\
+                    ORDER BY Patientenbesitzer.name')
             query.addBindValue("%{}%".format(text))
             query.addBindValue("%{}%".format(text))
         else:
@@ -130,3 +150,43 @@ class DataModels:
             self.kunden_model.setQuery(query)
         else:
             QMessageBox.critical(self, 'DatabaseError', f'Database Error \n\n {query.lastError().text()}')
+
+
+
+
+    # getter
+    def get_treatid_from_treatmodel_row(self,row):
+        return self.treatment_selection_model.record(row).value('ID_Behandlung')
+
+    def get_customerid_from_customermodel_row(self,row):
+        return self.kunden_model.record(row).value('Relakey')
+
+    def get_animalid_from_animimalmodel_row(self, row):
+        return self.owned_animals_model.record(row).value('ID_Tier')
+
+
+    # calculate prices
+
+    def calc_sum_from_service_treatment(self, treatment_id):
+        query = QSqlQuery()
+        query.prepare('SELECT sum(brutto) as sum_service_treatment FROM Beh_Leistungen '
+                      'GROUP BY ID_Behandlung HAVING ID_behandlung = :id ')
+        query.bindValue(':id', treatment_id)
+        qok = query.exec_()
+        if qok and query.next():
+            treatment_sum = query.value(0)
+            return treatment_sum
+        else:
+            return 0
+
+    def calc_sum_from_medics_treatment(self, treatment_id):
+        query = QSqlQuery()
+        query.prepare('SELECT sum(beh_med_preis_brutto) as sum_service_treatment FROM Beh_Medikamente '
+                      'GROUP BY ID_Behandlung HAVING ID_behandlung = :id ')
+        query.bindValue(':id', treatment_id)
+        qok = query.exec_()
+        if qok and query.next():
+            treatment_sum = query.value(0)
+            return treatment_sum
+        else:
+            return 0
