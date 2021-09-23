@@ -1,0 +1,18 @@
+2021-09-09 17:00:35.236 | INFO     | __main__:connect:15 - PyQtSqlConnection
+2021-09-09 17:05:12.546 | INFO     | __main__:connect:16 - PyQtSqlConnection
+2021-09-09 17:05:22.675 | INFO     | __main__:connect:16 - PyQtSqlConnection
+2021-09-09 17:05:55.614 | INFO     | __main__:connect:16 - PyQtSqlConnection
+2021-09-09 17:06:05.695 | INFO     | __main__:connect:16 - PyQtSqlConnection
+2021-09-09 17:06:33.945 | INFO     | __main__:connect:16 - PyQtSqlConnection
+2021-09-09 17:09:40.903 | INFO     | __main__:connect:16 - PyQtSqlConnection
+2021-09-09 17:17:24.909 | INFO     | __main__:connect:17 - PyQtSqlConnection
+2021-09-09 17:19:45.264 | INFO     | __main__:connect:18 - PyQtSqlConnection
+2021-09-09 17:20:24.454 | INFO     | __main__:connect:18 - PyQtSqlConnection
+2021-09-09 17:23:57.650 | INFO     | __main__:connect:18 - PyQtSqlConnection
+2021-09-09 17:24:09.500 | ERROR    | __main__:test_connection:33 - Fehler: Keine Verbindung zum Datenbanktreiber
+2021-09-09 17:25:02.257 | INFO     | __main__:connect:18 - PyQtSqlConnection
+2021-09-09 17:25:02.263 | ERROR    | __main__:test_connection:33 - Fehler: Keine Verbindung zum Datenbanktreiber
+2021-09-09 17:25:31.683 | INFO     | __main__:connect:18 - PyQtSqlConnection
+2021-09-09 17:29:32.694 | INFO     | __main__:connect:18 - PyQtSqlConnection
+2021-09-09 20:30:53.220 | INFO     | __main__:test_connection:26 - OK: PyQtSqlConnection etabliert
+2021-09-09 20:31:21.351 | INFO     | __main__:test_connection:26 - OK: PyQtSqlConnection etabliert
