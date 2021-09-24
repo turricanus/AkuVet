@@ -54,8 +54,18 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
         self.btntbwdelete.clicked.connect(self.evt_btn_clicked_delete_treatment_item)
 
     def insert_treatment_diagnosis(self):
-        lc = self.dm.treatment_diagnosis_model.rowCount()
-        self.dm.treatment_diagnosis_model.insertRow(lc+1)
+        r = self.dm.treatment_diagnosis_model.record()
+        r.setValue('ID_Behandlung', self.actual_treatment_id)
+        r.setValue('Diagnose_Freitext', 'Bitte neue Diagnose eintragen')
+        r.setValue('Beh_Index', 7)
+        self.dm.treatment_diagnosis_model.insertRecord(-1, r)
+        self.dm.treatment_diagnosis_model.submitAll()
+        self.dm.treatment_diagnosis_model.select()
+
+    def remove_treatment_diagnosis(self):
+        idx = self.tbvdiagnose.selectedIndexes()
+        self.dm.treatment_diagnosis_model.removeRow(idx[0].row())
+        self.dm.treatment_diagnosis_model.submitAll()
 
     def get_therapies_from_animal(self, animalid):
         if animalid:
@@ -215,5 +225,4 @@ class WindowTherapy(QDialog, Ui_lytMain, DataModels):
         self.insert_treatment_diagnosis()
 
     def evt_btn_clicked_delete_treatment_item(self):
-        # Todo
-        pass
+        self.remove_treatment_diagnosis()

@@ -162,6 +162,9 @@ class DataModels:
     def get_animalid_from_animimalmodel_row(self, row):
         return self.owned_animals_model.record(row).value('ID_Tier')
 
+
+
+
     # calculate prices
     def calc_sum_from_service_treatment(self, treatment_id):
         query = QSqlQuery()
