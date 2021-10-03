@@ -94,6 +94,7 @@ class WdMain(QMainWindow, Ui_MainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setStyle('Fusion')
     dlgMain = WdMain()
     dlgMain.show()
     sys.exit(app.exec_())

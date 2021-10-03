@@ -11,12 +11,6 @@ config.ini,a\3\a3369b85f2e190fd575d9636871f39c4f1253ca4
 C
 modules/__init__.py,9\e\9e0494a5c5e93c3ba8f26b3ea863f329107ca7b6
 G
-obj/akuvetdatamodels.py,7\b\7bd4d55a2bf4fd821cae0e36bd2c5dd4a2949db9
-F
-obj/service_catalog.py,7\9\796986e4b98a9ac9015b7582a549d66001af2267
-G
-ui/therapymaindialog.ui,a\6\a67067f6c65614d463d69f1949fd1756529aa7bd
-G
 ui/resources/akuvet.qrc,7\b\7bfebc244cf770566e0c9c8a4bc58ad68bd35831
 ?
 ui/akuvet_rc.py,c\f\cf68348fb8359fbca13bc7d485165145c6973c8e
@@ -30,3 +24,6 @@ M
 .idea/dictionaries/Rainer.xml,f\2\f2b863f519b4d47c3d6354d6d4674ee63c3435b7
 ^
 ..idea/inspectionProfiles/profiles_settings.xml,1\e\1e9075f5bf079c01ef2c910709e91a497d262080
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302

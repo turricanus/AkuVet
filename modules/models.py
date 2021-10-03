@@ -20,10 +20,7 @@ class DataModels:
         self.owned_animals_model = QSqlQueryModel()
         self.initialize_model_owned_animals()
 
-        self.treatment_selection_model = QSqlTableModel()
-        self.initialize_treatment_selection_model()
-
-        self.treatment_model = QSqlTableModel(self.treatment_selection_model)
+        self.treatment_model = QSqlTableModel()
 
         self.treatment_diagnosis_model = QSqlRelationalTableModel()
 
@@ -32,6 +29,9 @@ class DataModels:
 
         self.treatment_medics_model = QSqlRelationalTableModel()
         self.initialize_treatment_medic_model()
+
+        self.treatment_progress_model = QSqlTableModel()
+
 
     def initialize_model_kundenauswahl(self):
         self.kunden_model.setHeaderData(0, Qt.Horizontal, "Relakey")
@@ -54,7 +54,7 @@ class DataModels:
 
     def set_treatment_service_by_id(self, id_service_pk):
         self.treatment_service_model.setTable('Beh_Leistungen')
-        filt=f'ID_Beh_Leistung = {str(id_service_pk)}'
+        filt = f'ID_Beh_Leistung = {str(id_service_pk)}'
         self.treatment_service_model.setFilter(filt)
         self.treatment_service_model.select()
 
@@ -64,18 +64,16 @@ class DataModels:
         self.service_catalog_table_model.setFilter(filt)
         self.service_catalog_table_model.select()
 
-    def initialize_treatment_selection_model(self):
-        self.treatment_selection_model.setTable('Behandlung')
-
     def initialize_treatment_medic_model(self):
         self.treatment_medics_model.setTable('Beh_Medikamente')
 
     def set_treatment_model(self, animalid):
-        self.treatment_selection_model.setTable('Behandlung')
-        self.treatment_selection_model.setFilter(f'ID_Tier = {animalid}')
-        self.treatment_selection_model.select()
+        self.treatment_model.setTable('Behandlung')
+        self.treatment_model.setFilter(f'ID_Tier = {animalid}')
+        self.treatment_model.setEditStrategy(QSqlTableModel.EditStrategy(2))
+        self.treatment_model.select()
 
-    def set_treatment_diagnosis_module(self, treat_id):
+    def set_treatment_diagnosis_model(self, treat_id):
         self.treatment_diagnosis_model.setTable('Beh_Diagnosen')
         self.treatment_diagnosis_model.setFilter(f'ID_Behandlung = {treat_id}')
         self.treatment_diagnosis_model.setRelation(2, QSqlRelation('Diagnosen', 'ID_Diagnosen', 'Diagnose'))
@@ -84,7 +82,7 @@ class DataModels:
         self.treatment_diagnosis_model.setSort(3, Qt.SortOrder(0))
         self.treatment_diagnosis_model.select()
 
-    def set_treatment_service_module(self, treat_id):
+    def set_treatment_service_model(self, treat_id):
         self.treatment_service_model.setTable('Beh_Leistungen')
         self.treatment_service_model.setFilter(f'ID_Behandlung = {treat_id}')
         self.treatment_service_model.setRelation(2, QSqlRelation('GOT_Leistungen', 'ID', 'Text'))
@@ -99,6 +97,13 @@ class DataModels:
         self.treatment_medics_model.setJoinMode(QSqlRelationalTableModel.JoinMode(1))
         self.treatment_medics_model.setSort(4, Qt.SortOrder(0))
         self.treatment_medics_model.select()
+
+    def set_treatment_progress_model(self, treat_id):
+        self.treatment_progress_model.setTable('Beh_Verlauf')
+        self.treatment_progress_model.setFilter(f'ID_Behandlung = {treat_id}')
+        self.treatment_progress_model.setSort(2,Qt.SortOrder(0))
+        self.treatment_progress_model.select()
+
 
     def get_animals_from_customer(self, customerid):
         if customerid:
@@ -153,14 +158,15 @@ class DataModels:
             QMessageBox.critical(self, 'DatabaseError', f'Database Error \n\n {query.lastError().text()}')
 
     # getter
-    def get_treatid_from_treatmodel_row(self,row):
-        return self.treatment_selection_model.record(row).value('ID_Behandlung')
+    def get_treatid_from_treatmodel_row(self, row):
+        return self.treatment_model.record(row).value('ID_Behandlung')
 
     def get_customerid_from_customermodel_row(self,row):
         return self.kunden_model.record(row).value('Relakey')
 
     def get_animalid_from_animimalmodel_row(self, row):
         return self.owned_animals_model.record(row).value('ID_Tier')
+
 
 
 
